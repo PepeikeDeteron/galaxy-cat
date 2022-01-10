@@ -6,21 +6,20 @@ const Model: React.FC = () => {
     const renderer = new THREE.WebGLRenderer({
       canvas: document.querySelector('#canvas') as HTMLCanvasElement,
     });
-
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(45, 1 / 1);
-
     camera.position.set(0, 0, 1000);
 
-    // Three.js 動作確認用
-    const geometry = new THREE.BoxGeometry(400, 400, 400);
-    const material = new THREE.MeshNormalMaterial();
-    const box = new THREE.Mesh(geometry, material);
-
-    scene.add(box);
+    let rot = 0;
 
     const tick = () => {
-      box.rotation.y += 0.01;
+      rot += 0.1;
+
+      const radian = (rot * Math.PI) / 180;
+
+      camera.position.x = 1000 * Math.sin(radian);
+      camera.position.z = 1000 * Math.cos(radian);
+      camera.lookAt(new THREE.Vector3(0, 0, 0));
 
       renderer.render(scene, camera);
       requestAnimationFrame(tick);
@@ -38,8 +37,34 @@ const Model: React.FC = () => {
       camera.updateProjectionMatrix();
     };
 
+    const createStarField = () => {
+      const size = 3000;
+      const length = 1000;
+      const vertices = [];
+
+      for (let i = 0; i < length; i++) {
+        const x = size * (Math.random() - 0.5);
+        const y = size * (Math.random() - 0.5);
+        const z = size * (Math.random() - 0.5);
+
+        vertices.push(x, y, z);
+      }
+
+      const geometry = new THREE.BufferGeometry();
+      geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
+
+      const material = new THREE.PointsMaterial({
+        size: 5,
+        color: 0xffffff,
+      });
+
+      const mesh = new THREE.Points(geometry, material);
+      scene.add(mesh);
+    };
+
     tick();
     onResize();
+    createStarField();
     window.addEventListener('resize', onResize);
   };
 
