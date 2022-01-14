@@ -12,20 +12,20 @@ const Model: React.FC = () => {
     const controls = new OrbitControls(camera, renderer.domElement);
 
     scene.add(camera);
-    camera.position.set(3, 3, 3);
+    camera.position.set(2, 5, 5);
     controls.enableDamping = true;
 
     const generateGalaxy = () => {
       const parameters = {
-        count: 100000,
+        count: 250000,
         size: 0.01,
         radius: 5,
-        direction: 3,
-        curve: 2,
-        randomness: 0.2,
-        randomnessPower: 3,
-        insideColor: 0xffa500,
-        outsideColor: 0x00bfff,
+        direction: 4,
+        curve: 1.25,
+        randomness: 0.4,
+        randomnessPower: 1.5,
+        insideColor: 0xff6030,
+        outsideColor: 0x1b3984,
       };
 
       const particlePosition = new Float32Array(parameters.count * 3);
@@ -40,7 +40,7 @@ const Model: React.FC = () => {
         const curveAngle = radius * parameters.curve;
 
         const randomX = Math.pow(Math.random(), parameters.randomnessPower) * (Math.random() < 0.5 ? 1 : -1) * parameters.randomness * radius;
-        const randomY = Math.pow(Math.random(), parameters.randomnessPower) * (Math.random() < 0.5 ? 2 : -2) * parameters.randomness * radius;
+        const randomY = Math.pow(Math.random(), parameters.randomnessPower) * (Math.random() < 0.5 ? 0.5 : -0.5) * parameters.randomness * radius;
         const randomZ = Math.pow(Math.random(), parameters.randomnessPower) * (Math.random() < 0.5 ? 1 : -1) * parameters.randomness * radius;
 
         particlePosition[i * 3 + 0] = Math.cos(directionAngle + curveAngle) * radius + randomX;
@@ -65,9 +65,12 @@ const Model: React.FC = () => {
         depthWrite: false,
         blending: THREE.AdditiveBlending,
         vertexColors: true,
+        transparent: true,
       });
 
       const points = new THREE.Points(geometry, material);
+      points.rotation.set(0, 0, 45);
+
       scene.add(points);
     };
 
