@@ -19,15 +19,18 @@ const Model: React.FC = () => {
       const parameters = {
         count: 100000,
         size: 0.01,
+        radius: 5,
       };
 
       const geometry = new THREE.BufferGeometry();
       const position = new Float32Array(parameters.count * 3);
 
       for (let i = 0; i < parameters.count; i++) {
-        position[i * 3 + 0] = (Math.random() - 0.5) * 3;
-        position[i * 3 + 1] = (Math.random() - 0.5) * 3;
-        position[i * 3 + 2] = (Math.random() - 0.5) * 3;
+        const radius = Math.random() * parameters.radius;
+
+        position[i * 3 + 0] = radius;
+        position[i * 3 + 1] = 0;
+        position[i * 3 + 2] = 0;
       }
 
       geometry.setAttribute('position', new THREE.BufferAttribute(position, 3));
