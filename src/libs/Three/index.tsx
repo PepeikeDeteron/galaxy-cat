@@ -22,6 +22,8 @@ const Model: React.FC = () => {
         radius: 5,
         direction: 3,
         curve: 2,
+        randomness: 0.2,
+        randomnessPower: 3,
       };
 
       const geometry = new THREE.BufferGeometry();
@@ -33,9 +35,13 @@ const Model: React.FC = () => {
         const directionAngle = zero2one * Math.PI * 2;
         const curveAngle = radius * parameters.curve;
 
-        position[i * 3 + 0] = Math.cos(directionAngle + curveAngle) * radius;
-        position[i * 3 + 1] = 0;
-        position[i * 3 + 2] = Math.sin(directionAngle + curveAngle) * radius;
+        const randomX = Math.pow(Math.random(), parameters.randomnessPower) * (Math.random() < 0.5 ? 1 : -1) * parameters.randomness * radius;
+        const randomY = Math.pow(Math.random(), parameters.randomnessPower) * (Math.random() < 0.5 ? 2 : -2) * parameters.randomness * radius;
+        const randomZ = Math.pow(Math.random(), parameters.randomnessPower) * (Math.random() < 0.5 ? 1 : -1) * parameters.randomness * radius;
+
+        position[i * 3 + 0] = Math.cos(directionAngle + curveAngle) * radius + randomX;
+        position[i * 3 + 1] = randomY;
+        position[i * 3 + 2] = Math.sin(directionAngle + curveAngle) * radius + randomZ;
       }
 
       geometry.setAttribute('position', new THREE.BufferAttribute(position, 3));
