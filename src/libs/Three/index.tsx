@@ -21,6 +21,7 @@ const Model: React.FC = () => {
         size: 0.01,
         radius: 5,
         direction: 3,
+        curve: 2,
       };
 
       const geometry = new THREE.BufferGeometry();
@@ -29,11 +30,12 @@ const Model: React.FC = () => {
       for (let i = 0; i < parameters.count; i++) {
         const radius = Math.random() * parameters.radius;
         const zero2one = (i % parameters.direction) / parameters.direction;
-        const equalDirectionAngle = zero2one * Math.PI * 2;
+        const directionAngle = zero2one * Math.PI * 2;
+        const curveAngle = radius * parameters.curve;
 
-        position[i * 3 + 0] = Math.cos(equalDirectionAngle) * radius;
+        position[i * 3 + 0] = Math.cos(directionAngle + curveAngle) * radius;
         position[i * 3 + 1] = 0;
-        position[i * 3 + 2] = Math.sin(equalDirectionAngle) * radius;
+        position[i * 3 + 2] = Math.sin(directionAngle + curveAngle) * radius;
       }
 
       geometry.setAttribute('position', new THREE.BufferAttribute(position, 3));
