@@ -24,10 +24,14 @@ const Model: React.FC = () => {
         curve: 2,
         randomness: 0.2,
         randomnessPower: 3,
+        insideColor: 0xffa500,
+        outsideColor: 0x00bfff,
       };
 
-      const geometry = new THREE.BufferGeometry();
-      const position = new Float32Array(parameters.count * 3);
+      const particlePosition = new Float32Array(parameters.count * 3);
+      const particleColor = new Float32Array(parameters.count * 3);
+      const insideColor = new THREE.Color(parameters.insideColor);
+      const outsideColor = new THREE.Color(parameters.outsideColor);
 
       for (let i = 0; i < parameters.count; i++) {
         const radius = Math.random() * parameters.radius;
@@ -39,18 +43,28 @@ const Model: React.FC = () => {
         const randomY = Math.pow(Math.random(), parameters.randomnessPower) * (Math.random() < 0.5 ? 2 : -2) * parameters.randomness * radius;
         const randomZ = Math.pow(Math.random(), parameters.randomnessPower) * (Math.random() < 0.5 ? 1 : -1) * parameters.randomness * radius;
 
-        position[i * 3 + 0] = Math.cos(directionAngle + curveAngle) * radius + randomX;
-        position[i * 3 + 1] = randomY;
-        position[i * 3 + 2] = Math.sin(directionAngle + curveAngle) * radius + randomZ;
+        particlePosition[i * 3 + 0] = Math.cos(directionAngle + curveAngle) * radius + randomX;
+        particlePosition[i * 3 + 1] = randomY;
+        particlePosition[i * 3 + 2] = Math.sin(directionAngle + curveAngle) * radius + randomZ;
+
+        const mixedColor = insideColor.clone();
+        mixedColor.lerp(outsideColor, radius / parameters.radius);
+
+        particleColor[i * 3 + 0] = mixedColor.r;
+        particleColor[i * 3 + 1] = mixedColor.g;
+        particleColor[i * 3 + 2] = mixedColor.b;
       }
 
-      geometry.setAttribute('position', new THREE.BufferAttribute(position, 3));
+      const geometry = new THREE.BufferGeometry();
+      geometry.setAttribute('position', new THREE.BufferAttribute(particlePosition, 3));
+      geometry.setAttribute('color', new THREE.BufferAttribute(particleColor, 3));
 
       const material = new THREE.PointsMaterial({
         size: parameters.size,
         sizeAttenuation: true,
         depthWrite: false,
         blending: THREE.AdditiveBlending,
+        vertexColors: true,
       });
 
       const points = new THREE.Points(geometry, material);
