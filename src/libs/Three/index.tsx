@@ -1,8 +1,8 @@
-import React, { useEffect } from 'react';
+import { VFC, useEffect } from 'react';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
-const Model: React.FC = () => {
+const Model: VFC = () => {
   const createModel = () => {
     const renderer = new THREE.WebGLRenderer({
       canvas: document.querySelector('#canvas') as HTMLCanvasElement,
@@ -35,12 +35,12 @@ const Model: React.FC = () => {
 
       for (let i = 0; i < parameters.count; i++) {
         const radius = Math.random() * parameters.radius;
-        const zero2one = (i % parameters.direction) / parameters.direction;
-        const directionAngle = zero2one * Math.PI * 2;
+        const directionRange = (i % parameters.direction) / parameters.direction;
+        const directionAngle = directionRange * Math.PI * 2;
         const curveAngle = radius * parameters.curve;
 
         const randomX = Math.pow(Math.random(), parameters.randomnessPower) * (Math.random() < 0.5 ? 1 : -1) * parameters.randomness * radius;
-        const randomY = Math.pow(Math.random(), parameters.randomnessPower) * (Math.random() < 0.5 ? 0.5 : -0.5) * parameters.randomness * radius;
+        const randomY = Math.pow(Math.random(), parameters.randomnessPower) * (Math.random() < 0.5 ? 1 : -1) * parameters.randomness * radius / 2;
         const randomZ = Math.pow(Math.random(), parameters.randomnessPower) * (Math.random() < 0.5 ? 1 : -1) * parameters.randomness * radius;
 
         particlePosition[i * 3 + 0] = Math.cos(directionAngle + curveAngle) * radius + randomX;
@@ -68,10 +68,10 @@ const Model: React.FC = () => {
         transparent: true,
       });
 
-      const points = new THREE.Points(geometry, material);
-      points.rotation.set(0, 0, 45);
+      const galaxy = new THREE.Points(geometry, material);
+      galaxy.rotation.set(0, 0, 45);
 
-      scene.add(points);
+      scene.add(galaxy);
     };
 
     const tick = () => {
