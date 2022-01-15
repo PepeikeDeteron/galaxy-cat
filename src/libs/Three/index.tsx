@@ -70,11 +70,20 @@ const Model: VFC = () => {
 
       const galaxy = new THREE.Points(geometry, material);
       galaxy.rotation.set(0, 0, 45);
+      // galaxy.position.set(-1, 0, 0);
 
       scene.add(galaxy);
     };
 
+    let rot = 0;
     const tick = () => {
+      rot += 0.05;
+      const radian = rot * Math.PI / 180;
+
+      // camera.position.x = Math.sin(radian);
+      // camera.position.z = Math.cos(radian);
+      // camera.lookAt(new THREE.Vector3(0, 0, 0));
+
       controls.update();
       renderer.render(scene, camera);
       requestAnimationFrame(tick);
