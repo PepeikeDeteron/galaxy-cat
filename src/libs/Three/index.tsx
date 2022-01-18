@@ -10,15 +10,18 @@ const Model: VFC = () => {
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(75, 1 / 1, 0.1, 100);
     const controls = new OrbitControls(camera, renderer.domElement);
+    const textureLoader = new THREE.TextureLoader();
+    const particleTexture = textureLoader.load('assets/particle.png');
+    const nebulaTexture = textureLoader.load('assets/nebula.png');
 
     scene.add(camera);
     camera.position.set(2, 8, 2);
-    camera.scale.set(1, 1, 2);
+    camera.scale.set(1, 1, 1.75);
     controls.enableDamping = true;
 
     const generateGalaxy = () => {
       const parameters = {
-        count: 400000,
+        count: 500000,
         size: 0.015,
         radius: 5,
         direction: 4,
@@ -56,9 +59,6 @@ const Model: VFC = () => {
         particleColor[i * 3 + 2] = mixedColor.b;
       }
 
-      const textureLoader = new THREE.TextureLoader();
-      const particleTexture = textureLoader.load('assets/particle.png');
-
       const geometry = new THREE.BufferGeometry();
       geometry.setAttribute('position', new THREE.BufferAttribute(particlePosition, 3));
       geometry.setAttribute('color', new THREE.BufferAttribute(particleColor, 3));
@@ -74,20 +74,20 @@ const Model: VFC = () => {
       });
 
       const galaxy = new THREE.Points(geometry, material);
-      galaxy.rotation.set(0, 0, 45);
-      // galaxy.position.set(-1, 0, 0);
+      galaxy.rotation.set(0, 150, 45);
 
       scene.add(galaxy);
+      scene.background = nebulaTexture;
     };
 
     let rot = 0;
     const tick = () => {
-      rot += 0.1;
+      rot += 0.02;
       const radian = rot * Math.PI / 180;
 
-      // camera.position.x = Math.sin(radian);
-      // camera.position.z = Math.cos(radian);
-      // camera.lookAt(new THREE.Vector3(0, 0, 0));
+      camera.position.x = Math.sin(radian);
+      camera.position.z = Math.cos(radian);
+      camera.lookAt(new THREE.Vector3(0, 0, 0));
 
       controls.update();
       renderer.render(scene, camera);
