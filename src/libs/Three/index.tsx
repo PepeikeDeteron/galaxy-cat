@@ -12,13 +12,14 @@ const Model: VFC = () => {
     const controls = new OrbitControls(camera, renderer.domElement);
 
     scene.add(camera);
-    camera.position.set(2, 5, 5);
+    camera.position.set(2, 8, 2);
+    camera.scale.set(1, 1, 2);
     controls.enableDamping = true;
 
     const generateGalaxy = () => {
       const parameters = {
-        count: 250000,
-        size: 0.01,
+        count: 400000,
+        size: 0.015,
         radius: 5,
         direction: 4,
         curve: 1.25,
@@ -55,6 +56,9 @@ const Model: VFC = () => {
         particleColor[i * 3 + 2] = mixedColor.b;
       }
 
+      const textureLoader = new THREE.TextureLoader();
+      const particleTexture = textureLoader.load('assets/particle.png');
+
       const geometry = new THREE.BufferGeometry();
       geometry.setAttribute('position', new THREE.BufferAttribute(particlePosition, 3));
       geometry.setAttribute('color', new THREE.BufferAttribute(particleColor, 3));
@@ -66,6 +70,7 @@ const Model: VFC = () => {
         blending: THREE.AdditiveBlending,
         vertexColors: true,
         transparent: true,
+        alphaMap: particleTexture,
       });
 
       const galaxy = new THREE.Points(geometry, material);
@@ -77,7 +82,7 @@ const Model: VFC = () => {
 
     let rot = 0;
     const tick = () => {
-      rot += 0.05;
+      rot += 0.1;
       const radian = rot * Math.PI / 180;
 
       // camera.position.x = Math.sin(radian);
