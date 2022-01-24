@@ -117,11 +117,7 @@ const Model: VFC = () => {
     createModel();
   }, []);
 
-  return (
-    <>
-      <canvas id="canvas" />
-    </>
-  );
+  return <canvas id="canvas" />;
 }
 
 export default Model;
