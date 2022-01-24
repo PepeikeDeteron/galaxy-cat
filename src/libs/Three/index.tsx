@@ -12,7 +12,7 @@ const Model: VFC = () => {
     const controls = new OrbitControls(camera, renderer.domElement);
     const textureLoader = new THREE.TextureLoader();
     const particleTexture = textureLoader.load('assets/particle.png');
-    const nebulaTexture = textureLoader.load('assets/nebula.png');
+    const universeCatTexture = textureLoader.load('assets/universe-cat.png');
 
     scene.add(camera);
     camera.position.set(2, 8, 2);
@@ -75,9 +75,10 @@ const Model: VFC = () => {
 
       const galaxy = new THREE.Points(geometry, material);
       galaxy.rotation.set(0, 150, 45);
+      galaxy.position.set(1, 1, 0);
 
       scene.add(galaxy);
-      scene.background = nebulaTexture;
+      scene.background = universeCatTexture;
     };
 
     let rot = 0;
@@ -116,11 +117,7 @@ const Model: VFC = () => {
     createModel();
   }, []);
 
-  return (
-    <>
-      <canvas id="canvas" />
-    </>
-  );
+  return <canvas id="canvas" />;
 }
 
 export default Model;
